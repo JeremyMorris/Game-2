@@ -80,7 +80,7 @@ namespace Game_2
             {
                 VerticalSpeed -= _jumpSpeed;
                 Airborne = true;
-                _soundEffects["Jump"].Play(0.25f, 0.3f, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                _soundEffects["Jump"].Play(0.35f, 0.3f, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
             }
 
             // Count jumping frames
