@@ -24,6 +24,7 @@ namespace Game_2
         Texture2D loss;
         bool gameWon;
         bool gameLost;
+        bool songPlaying;
         float friction;
         float gravity;
 
@@ -43,6 +44,8 @@ namespace Game_2
         /// </summary>
         protected override void Initialize()
         {
+            Window.Title = "Boomerangs?!";
+
             graphics.PreferredBackBufferWidth = 1000;
             graphics.PreferredBackBufferHeight = 300;
             graphics.ApplyChanges();
@@ -54,6 +57,10 @@ namespace Game_2
 
             player = new Player(new Vector2((GraphicsDevice.Viewport.Width / 2) - 200, GraphicsDevice.Viewport.Height - 64), this, friction, gravity);
             boomerangManager = new BoomerangManager(new System.Random(), this, ref player);
+
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.2f;
+            songPlaying = false;
 
             base.Initialize();
         }
@@ -67,10 +74,12 @@ namespace Game_2
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load victory and loss text
+            // Load assets
             victory = Content.Load<Texture2D>("Victory");
             loss = Content.Load<Texture2D>("Loss");
             font = Content.Load<SpriteFont>("Score");
+            background = Content.Load<Texture2D>("Game2-Background");
+            song = Content.Load<Song>("CISGame2");
         }
 
         /// <summary>
@@ -94,12 +103,25 @@ namespace Game_2
             // Remove marked objects
             boomerangManager.RemoveBoomerangs();
 
+            // Play music
+            if (!songPlaying)
+            {
+                MediaPlayer.Play(song);
+                songPlaying = true;
+            }
+
             // Update game objects
             player.Update(gameTime);
             boomerangManager.Update(gameTime);
 
             // Detect ending of game
             if (player.FatalCollision) gameLost = true;
+
+            // Fade music out if game is lost
+            if (gameLost && MediaPlayer.Volume > 0)
+            {
+                MediaPlayer.Volume -= 0.02f;
+            }
 
             // update animations
             player.UpdateAnimation(gameTime);
@@ -119,6 +141,9 @@ namespace Game_2
 
             // spriteBatch Begin arguments from Stack Overflow post https://stackoverflow.com/questions/25145377/xna-blurred-sprites-when-scaled
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+
+            // Draw background
+            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
             // Draw player
             player.Draw(spriteBatch);

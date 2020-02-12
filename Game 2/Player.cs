@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Game_2
 {
@@ -19,10 +20,13 @@ namespace Game_2
         private float _friction;
         private float _gravity;
         private int _framesSinceJump = 0;
+        private int _footstepCount = 200;
+        private bool _playedDeathSound = false;
         private Rectangle _animRectangle;
         private Rectangle _collisionBox;
         protected AnimationManager _animationManager;
         protected Dictionary<string, Animation> _animations;
+        protected Dictionary<string, SoundEffect> _soundEffects;
 
         private KeyboardState _oldKeyboardState;
         private KeyboardState _currentKeyboardState;
@@ -76,6 +80,7 @@ namespace Game_2
             {
                 VerticalSpeed -= _jumpSpeed;
                 Airborne = true;
+                _soundEffects["Jump"].Play(0.25f, 0.3f, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
             }
 
             // Count jumping frames
@@ -129,6 +134,29 @@ namespace Game_2
                     HorizontalSpeed += _friction;
                     if (HorizontalSpeed > 0) HorizontalSpeed = 0;
                 }
+            }
+
+            // Play running SFX
+            if (HorizontalSpeed != 0 && !Airborne)
+            {
+                if (_animationManager._animation.CurrentFrame == 0 && _footstepCount > 200)
+                {
+                    _soundEffects["Footstep1"].Play(0.8f, 0, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                    _footstepCount = 0;
+                }
+                else if (_animationManager._animation.CurrentFrame == 5 && _footstepCount > 200)
+                {
+                    _soundEffects["Footstep2"].Play(0.8f, 0, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                    _footstepCount = 0;
+                }
+            }
+            _footstepCount += gameTime.ElapsedGameTime.Milliseconds;
+
+            // Play death SFX
+            if (FatalCollision && !_playedDeathSound)
+            {
+                _soundEffects["Death"].Play(0.5f, 0, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                _playedDeathSound = true;
             }
 
             // Keep player on screen
@@ -185,6 +213,16 @@ namespace Game_2
             animations["DeathLeft"].FrameSpeed = 100f;
 
             _animations = animations;
+
+            // Load SFX
+            _soundEffects = new Dictionary<string, SoundEffect>()
+            {
+                { "Footstep1", content.Load<SoundEffect>("SoundEffects/Footstep1") },
+                { "Footstep2", content.Load<SoundEffect>("SoundEffects/Footstep2") },
+                { "Jump", content.Load<SoundEffect>("SoundEffects/Jump") },
+                { "Death", content.Load<SoundEffect>("SoundEffects/Death") }
+            };
+
         }
 
         public void SetX(int x)

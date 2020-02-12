@@ -11,7 +11,7 @@ namespace Game_2
     // Controls the drawing and animations of game objects
     public class AnimationManager
     {
-        private Animation _animation;
+        public Animation _animation;
 
         private float _timer;
 

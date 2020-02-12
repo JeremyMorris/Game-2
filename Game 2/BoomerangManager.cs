@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,6 +13,7 @@ namespace Game_2
     public class BoomerangManager
     {
         public List<Boomerang> _boomerangList = new List<Boomerang>();
+        private SoundEffect _throwSFX;
         private Random _random;
         private Game1 _game;
         private Player _player;
@@ -24,6 +26,8 @@ namespace Game_2
             _random = r;
             _game = game;
             _player = player;
+
+            LoadContent(game.Content);
 
             _spawnInterval = 2000;
         }
@@ -54,6 +58,8 @@ namespace Game_2
 
                 _timeAtLastSpawn = gameTime.TotalGameTime.TotalMilliseconds;
                 if (_spawnInterval > 500) _spawnInterval -= 50;
+
+                _throwSFX.Play(0.125f, 0, (position.X * 2) / _game.GraphicsDevice.Viewport.Width - 1);
             }
 
             foreach (Boomerang boomerang in _boomerangList)
@@ -94,6 +100,12 @@ namespace Game_2
             {
                 boomerang.UpdateAnimation(gameTime);
             }
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            // Load SFX
+            _throwSFX = content.Load<SoundEffect>("SoundEffects/Throw");
         }
     }
 }

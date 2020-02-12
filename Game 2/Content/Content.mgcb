@@ -37,6 +37,24 @@
 /processorParam:TextureFormat=Color
 /build:Boomerang/Boomerang-Right.png
 
+#begin CISGame2.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:CISGame2.mp3
+
+#begin Game2-Background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Game2-Background.png
+
 #begin Loss.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -151,6 +169,36 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Score.spritefont
+
+#begin SoundEffects/Death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Death.wav
+
+#begin SoundEffects/Footstep1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Footstep1.wav
+
+#begin SoundEffects/Footstep2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Footstep2.wav
+
+#begin SoundEffects/Jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Jump.wav
+
+#begin SoundEffects/Throw.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/Throw.wav
 
 #begin Victory.png
 /importer:TextureImporter
