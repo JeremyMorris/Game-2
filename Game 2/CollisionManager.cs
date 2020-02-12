@@ -22,10 +22,24 @@ namespace Game_2
             return v == other;
         }
 
-        public static bool CollidesWith(Vector2 v, Rectangle r)
+        public bool CollidesWith(Vector2 v, Rectangle r)
         {
             return (r.X <= v.X && v.X <= r.X + r.Width)
                 && (r.Y <= v.Y && v.Y <= r.Y + r.Height);
+        }
+
+        public bool IsWithinRange(Vector2 v, Rectangle r, float range)
+        {
+            float nearestX = Clamp(v.X, r.X, r.X + r.Width);
+            float nearestY = Clamp(v.Y, r.Y, r.Y + r.Height);
+            return (Math.Pow(range, 2) > (Math.Pow(v.X - nearestX, 2) + Math.Pow(v.Y - nearestY, 2)));
+        }
+
+        private float Clamp(float point, float min, float max)
+        {
+            if (point < min) return min;
+            else if (point > max) return max;
+            else return point;
         }
     }
 }

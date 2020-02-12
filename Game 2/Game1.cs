@@ -17,13 +17,17 @@ namespace Game_2
 
         Song song;
         Player player;
+        BoomerangManager boomerangManager;
         Texture2D background;
+        SpriteFont font;
         Texture2D victory;
         Texture2D loss;
-
         bool gameWon;
         bool gameLost;
         float friction;
+        float gravity;
+
+        public int Score { get; set; }
 
         public Game1()
         {
@@ -39,15 +43,17 @@ namespace Game_2
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 1200;
-            graphics.PreferredBackBufferHeight = 800;
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 300;
             graphics.ApplyChanges();
 
-            friction = 0.018f;
+            friction = 0.04f;
+            gravity = 0.06f;
             gameLost = false;
             gameWon = false;
 
-            player = new Player(new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, GraphicsDevice.Viewport.Height - 100), this);
+            player = new Player(new Vector2((GraphicsDevice.Viewport.Width / 2) - 200, GraphicsDevice.Viewport.Height - 64), this, friction, gravity);
+            boomerangManager = new BoomerangManager(new System.Random(), this, ref player);
 
             base.Initialize();
         }
@@ -64,6 +70,7 @@ namespace Game_2
             // Load victory and loss text
             victory = Content.Load<Texture2D>("Victory");
             loss = Content.Load<Texture2D>("Loss");
+            font = Content.Load<SpriteFont>("Score");
         }
 
         /// <summary>
@@ -84,8 +91,20 @@ namespace Game_2
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            // Remove marked objects
+            boomerangManager.RemoveBoomerangs();
 
-            // TODO: Add your update logic here
+            // Update game objects
+            player.Update(gameTime);
+            boomerangManager.Update(gameTime);
+
+            // Detect ending of game
+            if (player.FatalCollision) gameLost = true;
+
+            // update animations
+            player.UpdateAnimation(gameTime);
+            boomerangManager.UpdateAnimation(gameTime);
+
 
             base.Update(gameTime);
         }
@@ -98,13 +117,16 @@ namespace Game_2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // update animations
-            player.UpdateAnimation(gameTime);
-
             // spriteBatch Begin arguments from Stack Overflow post https://stackoverflow.com/questions/25145377/xna-blurred-sprites-when-scaled
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
 
+            // Draw player
             player.Draw(spriteBatch);
+            boomerangManager.Draw(spriteBatch);
+
+            // Draw text
+            if (gameLost) spriteBatch.Draw(loss, new Rectangle((GraphicsDevice.Viewport.Width - 800) / 2, (GraphicsDevice.Viewport.Height - 700) / 2, 800, 700), Color.White);
+            spriteBatch.DrawString(font, "Score: " + Score, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();
 

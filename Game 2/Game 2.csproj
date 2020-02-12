@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="AnimationManager.cs" />
+    <Compile Include="Boomerang.cs" />
+    <Compile Include="BoomerangManager.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Player.cs" />

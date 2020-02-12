@@ -22,6 +22,8 @@ namespace Game_2
 
         public bool IsLooping { get; set; }
 
+        public bool FrameHoldover { get; set; }
+
         public Texture2D Texture { get; private set; }
 
         public Animation(Texture2D texture, int frameCount)
@@ -38,6 +40,15 @@ namespace Game_2
             FrameCount = frameCount;
             IsLooping = looping;
             FrameSpeed = 200f;
+        }
+
+        public Animation(Texture2D texture, int frameCount, bool looping, bool holdover)
+        {
+            Texture = texture;
+            FrameCount = frameCount;
+            IsLooping = looping;
+            FrameSpeed = 200f;
+            FrameHoldover = true;
         }
     }
 }

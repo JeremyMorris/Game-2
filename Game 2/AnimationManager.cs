@@ -41,7 +41,8 @@ namespace Game_2
             }
 
             _animation = animation;
-            _animation.CurrentFrame = 0;
+
+            if (!_animation.FrameHoldover) _animation.CurrentFrame = 0;
             _timer = 0;
         }
 
