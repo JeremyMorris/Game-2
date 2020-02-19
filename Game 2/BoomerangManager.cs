@@ -90,7 +90,11 @@ namespace Game_2
             if (removeCount > 0)
             {
                 _boomerangList = _boomerangList.Except(removeList).ToList();
-                if (!_player.FatalCollision) _game.Score += removeCount;
+                if (!_player.FatalCollision)
+                {
+                    _game.Score += removeCount;
+                    if (_game.Score > _game.HighScore) _game.HighScore = _game.Score;
+                }
             }
         }
 

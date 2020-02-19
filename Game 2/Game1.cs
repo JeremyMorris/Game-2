@@ -29,6 +29,7 @@ namespace Game_2
         float gravity;
 
         public int Score { get; set; }
+        public int HighScore { get; set; }
 
         public Game1()
         {
@@ -170,7 +171,8 @@ namespace Game_2
                 spriteBatch.DrawString(font, "PRESS 'R' TO RESTART", new Vector2(380, 200), Color.DarkRed);
             }
 
-            spriteBatch.DrawString(font, "Score: " + Score, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(font, "Score: " + Score, new Vector2(10, 40), Color.White);
+            spriteBatch.DrawString(font, "High Score: " + HighScore, new Vector2(10, 10), Color.Gold);
 
             spriteBatch.End();
 
