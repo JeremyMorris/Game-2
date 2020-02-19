@@ -17,7 +17,7 @@ namespace Game_2
         private Random _random;
         private Game1 _game;
         private Player _player;
-        private int _spawnInterval;
+        public int _spawnInterval;
         private double _timeAtLastSpawn;
         private bool _spawnRight;
 
@@ -63,10 +63,16 @@ namespace Game_2
             }
 
             // TODO: Pull out boomerang collision into separate function and only call in on boomerangs within player adjacent partitions
+            int playerPartition = _player.Partition;
 
             foreach (Boomerang boomerang in _boomerangList)
             {
                 boomerang.Update(gameTime);
+
+                if (boomerang.Partition == playerPartition - 1 || boomerang.Partition == playerPartition || boomerang.Partition == playerPartition + 1)
+                {
+                    boomerang.DetectCollisionWithPlayer();
+                }
             }
         }
 

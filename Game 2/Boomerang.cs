@@ -87,13 +87,6 @@ namespace Game_2
             SetY((int)(Y + VerticalSpeed * (float)gameTime.ElapsedGameTime.TotalMilliseconds));
             SetX((int)(X + HorizontalSpeed * (float)gameTime.ElapsedGameTime.TotalMilliseconds));
 
-            // Detect collision
-            if (DetectCollisionWithPlayer())
-            {
-                PlayerCollision = true;
-                BoomerangModel.player.FatalCollision = true;
-            }
-
             // Mark for removal
             if (FromRight)
             {
@@ -105,9 +98,13 @@ namespace Game_2
             }
         }
 
-        public bool DetectCollisionWithPlayer()
+        public void DetectCollisionWithPlayer()
         {
-            return _collisionManager.IsWithinRange(Center, BoomerangModel.player.CollisionBox, 8);
+            if (_collisionManager.IsWithinRange(Center, BoomerangModel.player.CollisionBox, 8))
+            {
+                PlayerCollision = true;
+                BoomerangModel.player.FatalCollision = true;
+            }
         }
 
         public void SetX(float x)
@@ -116,7 +113,7 @@ namespace Game_2
             X = x;
             _animRectangle.X = (int)x;
 
-            Partition = BoomerangModel.game.GraphicsDevice.Viewport.Width / (int)Center.X;
+            Partition = (int)Center.X / 100;
         }
 
         public void SetY(float y)

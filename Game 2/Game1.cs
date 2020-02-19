@@ -123,6 +123,20 @@ namespace Game_2
                 MediaPlayer.Volume -= 0.02f;
             }
 
+            // Handle game restart
+            if (gameLost && Keyboard.GetState().IsKeyDown(Keys.R))
+            {
+                MediaPlayer.Volume = 0.2f;
+                MediaPlayer.Play(song);
+                Score = 0;
+                player.FatalCollision = false;
+                player.SetX((GraphicsDevice.Viewport.Width / 2) - 200);
+                boomerangManager._spawnInterval = 2000;
+                boomerangManager._boomerangList.Clear();
+                gameLost = false;
+            }
+
+
             // update animations
             player.UpdateAnimation(gameTime);
             boomerangManager.UpdateAnimation(gameTime);
@@ -150,7 +164,12 @@ namespace Game_2
             boomerangManager.Draw(spriteBatch);
 
             // Draw text
-            if (gameLost) spriteBatch.Draw(loss, new Rectangle((GraphicsDevice.Viewport.Width - 800) / 2, (GraphicsDevice.Viewport.Height - 700) / 2, 800, 700), Color.White);
+            if (gameLost)
+            {
+                spriteBatch.Draw(loss, new Rectangle((GraphicsDevice.Viewport.Width - 800) / 2, (GraphicsDevice.Viewport.Height - 700) / 2, 800, 700), Color.White);
+                spriteBatch.DrawString(font, "PRESS 'R' TO RESTART", new Vector2(380, 200), Color.DarkRed);
+            }
+
             spriteBatch.DrawString(font, "Score: " + Score, new Vector2(10, 10), Color.White);
 
             spriteBatch.End();

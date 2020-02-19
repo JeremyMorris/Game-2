@@ -233,7 +233,7 @@ namespace Game_2
             _animRectangle.X = x;
             this.X = x;
 
-            Partition = game.GraphicsDevice.Viewport.Width / (int)_collisionBox.X;
+            Partition = (int)_collisionBox.X / 100;
         }
 
         public void SetY(int y)
