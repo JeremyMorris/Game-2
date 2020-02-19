@@ -10,8 +10,6 @@ namespace Game_2
     // Object to hold animation information
     public class Animation
     {
-        public int CurrentFrame { get; set; }
-
         public int FrameCount { get; private set; }
 
         public int FrameHeight { get { return Texture.Height; } }
@@ -48,7 +46,7 @@ namespace Game_2
             FrameCount = frameCount;
             IsLooping = looping;
             FrameSpeed = 200f;
-            FrameHoldover = true;
+            FrameHoldover = holdover;
         }
     }
 }

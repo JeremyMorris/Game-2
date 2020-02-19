@@ -27,7 +27,7 @@ namespace Game_2
             _game = game;
             _player = player;
 
-            LoadContent(game.Content);
+            BoomerangModel.SetValues(ref game, ref player, LoadAnimations(game.Content));
 
             _spawnInterval = 2000;
         }
@@ -52,7 +52,7 @@ namespace Game_2
                     turningPoint = _random.Next(500, 800);
                 }
 
-                Boomerang newBoomerang = new Boomerang(position, _game, _spawnRight, turningPoint, ref _player);
+                Boomerang newBoomerang = new Boomerang(position, _spawnRight, turningPoint);
                 _boomerangList.Add(newBoomerang);
                 _spawnRight = !_spawnRight;
 
@@ -61,6 +61,8 @@ namespace Game_2
 
                 _throwSFX.Play(0.125f, 0, (position.X * 2) / _game.GraphicsDevice.Viewport.Width - 1);
             }
+
+            // TODO: Pull out boomerang collision into separate function and only call in on boomerangs within player adjacent partitions
 
             foreach (Boomerang boomerang in _boomerangList)
             {
@@ -102,10 +104,22 @@ namespace Game_2
             }
         }
 
-        public void LoadContent(ContentManager content)
+        public Dictionary<string, Animation> LoadAnimations(ContentManager content)
         {
             // Load SFX
             _throwSFX = content.Load<SoundEffect>("SoundEffects/Throw");
+
+            Dictionary<string, Animation> _animations = new Dictionary<string, Animation>()
+            {
+                { "Left", new Animation(content.Load<Texture2D>("Boomerang/Boomerang-Left"), 8) },
+                { "Right", new Animation(content.Load<Texture2D>("Boomerang/Boomerang-Right"), 8) }
+            };
+
+            // Correct frame speeds
+            _animations["Right"].FrameSpeed = 60f;
+            _animations["Left"].FrameSpeed = 60f;
+
+            return _animations;
         }
     }
 }

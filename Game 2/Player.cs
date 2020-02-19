@@ -47,6 +47,8 @@ namespace Game_2
 
         public bool FatalCollision { get; set; }
 
+        public int Partition { get; set; }
+
         public Rectangle CollisionBox { get { return _collisionBox; } }
 
         public Player(Vector2 playerPosition, Game1 game, float f, float g)
@@ -80,7 +82,7 @@ namespace Game_2
             {
                 VerticalSpeed -= _jumpSpeed;
                 Airborne = true;
-                _soundEffects["Jump"].Play(0.35f, 0.3f, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                _soundEffects["Jump"].Play(0.35f, 0.3f, (_collisionBox.X * 2) / game.GraphicsDevice.Viewport.Width - 0.5f);
             }
 
             // Count jumping frames
@@ -139,14 +141,14 @@ namespace Game_2
             // Play running SFX
             if (HorizontalSpeed != 0 && !Airborne)
             {
-                if (_animationManager._animation.CurrentFrame == 0 && _footstepCount > 200)
+                if (_animationManager.CurrentFrame == 0 && _footstepCount > 200)
                 {
-                    _soundEffects["Footstep1"].Play(0.8f, 0, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                    _soundEffects["Footstep1"].Play(0.8f, 0, (_collisionBox.X * 2) / game.GraphicsDevice.Viewport.Width - 0.5f);
                     _footstepCount = 0;
                 }
-                else if (_animationManager._animation.CurrentFrame == 5 && _footstepCount > 200)
+                else if (_animationManager.CurrentFrame == 5 && _footstepCount > 200)
                 {
-                    _soundEffects["Footstep2"].Play(0.8f, 0, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                    _soundEffects["Footstep2"].Play(0.8f, 0, (_collisionBox.X * 2) / game.GraphicsDevice.Viewport.Width - 0.5f);
                     _footstepCount = 0;
                 }
             }
@@ -155,7 +157,7 @@ namespace Game_2
             // Play death SFX
             if (FatalCollision && !_playedDeathSound)
             {
-                _soundEffects["Death"].Play(0.5f, 0, (X * 2) / game.GraphicsDevice.Viewport.Width - 1);
+                _soundEffects["Death"].Play(0.5f, 0, (_collisionBox.X * 2) / game.GraphicsDevice.Viewport.Width - 0.5f);
                 _playedDeathSound = true;
             }
 
@@ -230,6 +232,8 @@ namespace Game_2
             _collisionBox.X = x + 8;
             _animRectangle.X = x;
             this.X = x;
+
+            Partition = game.GraphicsDevice.Viewport.Width / (int)_collisionBox.X;
         }
 
         public void SetY(int y)

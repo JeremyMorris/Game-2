@@ -13,6 +13,8 @@ namespace Game_2
     {
         public Animation _animation;
 
+        public int CurrentFrame { get; set; }
+
         private float _timer;
 
         public AnimationManager(Animation animation)
@@ -25,7 +27,7 @@ namespace Game_2
         {
             spriteBatch.Draw(_animation.Texture,
                             rectangle,
-                            new Rectangle(_animation.CurrentFrame * _animation.FrameWidth, // get correct frame from spritesheet
+                            new Rectangle(CurrentFrame * _animation.FrameWidth, // get correct frame from spritesheet
                                           0,
                                           _animation.FrameWidth,
                                           _animation.FrameHeight),
@@ -40,9 +42,17 @@ namespace Game_2
                 return;
             }
 
+            if (!(animation.FrameHoldover && _animation.FrameHoldover))
+            {
+                CurrentFrame = 0;
+            } 
+            else if (CurrentFrame > animation.FrameCount - 1)
+            {
+                CurrentFrame = 0;
+            }
+
             _animation = animation;
 
-            if (!_animation.FrameHoldover) _animation.CurrentFrame = 0;
             _timer = 0;
         }
 
@@ -50,7 +60,7 @@ namespace Game_2
         public void Stop()
         {
             _timer = 0;
-            _animation.CurrentFrame = 0;
+            CurrentFrame = 0;
         }
 
         // Update which frame of the animation to play
@@ -63,14 +73,14 @@ namespace Game_2
                 _timer = 0f;
 
                 // do not progress frames if the last frame of a non-looping animation is reached
-                if (_animation.CurrentFrame == _animation.FrameCount - 1 && (!_animation.IsLooping)) return;
+                if (CurrentFrame == _animation.FrameCount - 1 && (!_animation.IsLooping)) return;
 
-                _animation.CurrentFrame++; // increment the frame counter
+                CurrentFrame++; // increment the frame counter
 
                 // if the last frame of the animation has been exceeded, loop back to the first frame
-                if (_animation.CurrentFrame == _animation.FrameCount)
+                if (CurrentFrame == _animation.FrameCount)
                 {
-                    _animation.CurrentFrame = 0;
+                    CurrentFrame = 0;
                 }
             }
         }

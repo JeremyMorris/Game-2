@@ -12,10 +12,7 @@ namespace Game_2
     public class Boomerang
     {
         protected AnimationManager _animationManager;
-        protected Dictionary<string, Animation> _animations;
         private Rectangle _animRectangle;
-        private Game1 _game;
-        private Player _player;
         private CollisionManager _collisionManager;
 
         private float _maxSpeed = 0.5f;
@@ -40,12 +37,12 @@ namespace Game_2
 
         public bool MarkedForRemoval { get; set; }
 
-        public Boomerang(Vector2 origin, Game1 game, bool right, float turningPoint, ref Player player)
+        public int Partition { get; set; }
+
+        public Boomerang(Vector2 origin, bool right, float turningPoint)
         {
             PlayerCollision = false;
             FromRight = right;
-            _player = player;
-            _game = game;
             TurningPoint = turningPoint;
 
             Center = new Vector2(origin.X + 12, origin.Y + 12);
@@ -54,8 +51,7 @@ namespace Game_2
             SetX(origin.X);
             SetY(origin.Y);
 
-            LoadContent(_game.Content);
-            _animationManager = new AnimationManager(_animations.First().Value);
+            _animationManager = new AnimationManager(BoomerangModel.animations.First().Value);
             _collisionManager = new CollisionManager();
 
             if (FromRight) HorizontalSpeed = -_maxSpeed;
@@ -95,13 +91,13 @@ namespace Game_2
             if (DetectCollisionWithPlayer())
             {
                 PlayerCollision = true;
-                _player.FatalCollision = true;
+                BoomerangModel.player.FatalCollision = true;
             }
 
             // Mark for removal
             if (FromRight)
             {
-                if (Center.X > _game.GraphicsDevice.Viewport.Width + _animRectangle.Width) MarkedForRemoval = true;
+                if (Center.X > BoomerangModel.game.GraphicsDevice.Viewport.Width + _animRectangle.Width) MarkedForRemoval = true;
             }
             else
             {
@@ -111,7 +107,7 @@ namespace Game_2
 
         public bool DetectCollisionWithPlayer()
         {
-            return _collisionManager.IsWithinRange(Center, _player.CollisionBox, 8);
+            return _collisionManager.IsWithinRange(Center, BoomerangModel.player.CollisionBox, 8);
         }
 
         public void SetX(float x)
@@ -119,6 +115,8 @@ namespace Game_2
             Center = new Vector2(x + 12, this.Center.Y);
             X = x;
             _animRectangle.X = (int)x;
+
+            Partition = BoomerangModel.game.GraphicsDevice.Viewport.Width / (int)Center.X;
         }
 
         public void SetY(float y)
@@ -141,25 +139,12 @@ namespace Game_2
 
             if (FromRight)
             {
-                _animationManager.Play(_animations["Left"]);
+                _animationManager.Play(BoomerangModel.animations["Left"]);
             }
             else
             {
-                _animationManager.Play(_animations["Right"]);
+                _animationManager.Play(BoomerangModel.animations["Right"]);
             }
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            _animations = new Dictionary<string, Animation>()
-            {
-                { "Left", new Animation(content.Load<Texture2D>("Boomerang/Boomerang-Left"), 8) },
-                { "Right", new Animation(content.Load<Texture2D>("Boomerang/Boomerang-Right"), 8) }
-            };
-
-            // Correct frame speeds
-            _animations["Right"].FrameSpeed = 60f;
-            _animations["Left"].FrameSpeed = 60f;
         }
     }
 }
