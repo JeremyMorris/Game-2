@@ -61,8 +61,7 @@ namespace Game_2
 
                 _throwSFX.Play(0.125f, 0, (position.X * 2) / _game.GraphicsDevice.Viewport.Width - 1);
             }
-
-            // TODO: Pull out boomerang collision into separate function and only call in on boomerangs within player adjacent partitions
+            
             int playerPartition = _player.Partition;
 
             foreach (Boomerang boomerang in _boomerangList)

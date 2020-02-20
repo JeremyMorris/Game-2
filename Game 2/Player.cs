@@ -21,7 +21,7 @@ namespace Game_2
         private float _gravity;
         private int _framesSinceJump = 0;
         private int _footstepCount = 200;
-        private bool _playedDeathSound = false;
+        public bool _playedDeathSound = false;
         private Rectangle _animRectangle;
         private Rectangle _collisionBox;
         protected AnimationManager _animationManager;

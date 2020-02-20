@@ -135,6 +135,7 @@ namespace Game_2
                 boomerangManager._spawnInterval = 2000;
                 boomerangManager._boomerangList.Clear();
                 gameLost = false;
+                player._playedDeathSound = false;
             }
 
 
